@@ -23,50 +23,106 @@ class KulinerController extends Controller
     public function store(Request $request)
     {
         $data = new Kuliner();
-        dd($data);
         $data->nama = $request->input('nama');
         $data->foto = $request->input('foto');
         $data->deskripsi = $request->input('deskripsi');
 
         if($data->save()){
-            $res["message"]="Sukses";
-            $res["status"]=200;
-            $res["value"]=$data;
-            return response($res);
+
+            return response()->json([
+                'status'        => true,
+                'code'          => 0,
+                'message' 	    => "success",
+                'data'          => $data
+            ], 200);
 
         } else{
-            $res["message"]="Gagal";
-            $res["status"]=400;
-            return response($res);
+
+            return response()->json([
+                'status'        => false,
+                'code'          => 0,
+                'message' 	    => "data is not saved",
+                'data'          => null
+            ], 400);
+        
         }
 
     }
 
     public function show($id)
     {
-        $data=Kuliner::find($id);
+        $data = Kuliner::find($id);
 
         if(!$data){
+
             return response()->json([
-                'success' => false,
-                'status' => 400,
-                'message' => 'mahasiswa with nim ' . $id . ' not found'
+                'status'        => false,
+                'code'          => 0,
+                'message' 	    => "data is not found",
+                'data'          => null
             ], 400);
+
         }else{
+
             return response()->json([
-                'success' => true,
-                'status' => 200,
-                'message' => $data
+                'status'        => true,
+                'code'          => 0,
+                'message' 	    => "success",
+                'data'          => $data
             ], 200);
+
         }
     }
-    public function update(Request $request, Kuliner $kuliner)
+    public function update(Request $request, $id)
     {
-        //
+        $data = Kuliner::find($id);
+        $data->nama = $request->input('nama');
+        $data->foto = $request->input('foto');
+        $data->deskripsi = $request->input('deskripsi');
+
+        if($data->save()){
+
+            return response()->json([
+                'status'        => true,
+                'code'          => 0,
+                'message' 	    => "success",
+                'data'          => $data
+            ], 200);
+
+        } else{
+
+            return response()->json([
+                'status'        => false,
+                'code'          => 0,
+                'message' 	    => "data is not updated",
+                'data'          => null
+            ], 400);
+        
+        }
     }
 
-    public function destroy(Kuliner $kuliner)
+    public function destroy($id)
     {
-        //
+        $data = Kuliner::find($id);
+
+        if(!$data){
+
+            return response()->json([
+                'status'        => false,
+                'code'          => 0,
+                'message' 	    => "data is not found",
+                'data'          => null
+            ], 400);
+
+        }else{
+            $data->delete();
+            return response()->json([
+                'status'        => true,
+                'code'          => 0,
+                'message' 	    => "success",
+                'data'          => $data
+            ], 200);
+
+        }
     }
 }
